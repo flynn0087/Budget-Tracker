@@ -16,7 +16,15 @@ request.onsuccess = function(evt) {
     }
 };
 
+//gives error if not online
 request.onerror = function(evt) {
     console.log("There was an error");
+};
+
+//creates a transaction on the pending DB, store the object
+function pendingRecord(record) {
+    const transaction = db.transaction(["pending"], "readwrite");
+    const store = transaction.createObjectStore("pending");
+    store.add(record);
 };
 
