@@ -7,3 +7,16 @@ request.onupgradeneeded = function(evt) {
     const db = evt.target.result;
     db.createObjectStore("pending", { autoIncement: true });
 };
+
+//checks if online before reading the database
+request.onsuccess = function(evt) {
+    db = evt.target.result;
+    if (navigator.onLine) {
+        checkDatabase();
+    }
+};
+
+request.onerror = function(evt) {
+    console.log("There was an error");
+};
+
