@@ -32,13 +32,13 @@ function pendingRecord(record) {
 function checkDatabase() {
     const transaction = db.transaction(["pending"], "readwrite");
     const store = transaction.objectStore("pending");
-    const allPending = store.allPending();
+    const getAll = store.getAll();
 
-    allPending.onsucess = function() {
-        if (allPending.result.length > 0) {
+    getAll.onsucess = function() {
+        if (getAll.result.length > 0) {
             fetch("/api/transaction/bulk", {
                 method: "POST",
-                body: JSON.stringify(allPending.result),
+                body: JSON.stringify(getAll.result),
                 headers: {
                     Accept: "application/json, text/plain, */*",
                     "Content-Type": "application/json"
