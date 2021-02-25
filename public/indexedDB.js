@@ -12,12 +12,12 @@ request.onupgradeneeded = function(evt) {
 };
 
 //checks if online before reading the database
-request.onsuccess = function(evt) {
-    db = evt.target.result;
+request.onsuccess = () => {
+    db = request.result;
 };
 
 //gives error if not online
-request.onerror = function(evt) {
+request.onerror = () => {
     console.log("There was an error");
 };
 
@@ -26,6 +26,7 @@ function saveRecord(record) {
     const transaction = db.transaction(["budget"], "readwrite");
     const budgetStore = transaction.objectStore("budget");
     budgetStore.add(record);
+    console.log(record);
 };
 
 //this section compares the online database to the budget and merges them
@@ -35,22 +36,21 @@ function checkDatabase() {
     const getAll = budgetStore.getAll();
 
     getAll.onsucess = function() {
-        if (getAll.result.length > 0) {
-            fetch("/api/transaction/bulk", {
-                method: "POST",
-                body: JSON.stringify(getAll.result),
-                headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(() => {
-                const transaction = db.transaction(["budget"], "readwrite");
-                const budgetStore = transaction.objectStore("budget");
-                budgetStore.clear();
-            });
-        }
+        
+        fetch("/api/transaction/bulk", {
+            method: "POST",
+            body: JSON.stringify(getAll.result),
+            headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(() => {
+            const transaction = db.transaction(["budget"], "readwrite");
+            const budgetStore = transaction.objectStore("budget");
+            budgetStore.clear();
+        });        
     };
 };
 
