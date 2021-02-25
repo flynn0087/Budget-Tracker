@@ -1,12 +1,12 @@
-let db;
-//new db request for a budget database
-const request = indexedDB.open("budget", 1);
+let db = () => {
+    const request = window.indexedDB.open("budget", 1);
 
 //creates storage for the objects that are awating being "online"
-request.onupgradeneeded = function(evt) {
-    const db = evt.target.result;
-    db.createObjectStore("pending", { keyPath: "id", autoIncrement: true });
-};
+    request.onupgradeneeded = function(evt) {
+        const db = evt.target.result;
+        db.createObjectStore("budget", { keyPath: "id", autoIncrement: true });
+    };
+};    
 
 //checks if online before reading the database
 request.onsuccess = function(evt) {
@@ -21,17 +21,17 @@ request.onerror = function(evt) {
     console.log("There was an error");
 };
 
-//creates a transaction on the pending DB, store the object
+//creates a transaction on the budget DB, store the object
 function saveRecord(record) {
-    const transaction = db.transaction(["pending"], "readwrite");
-    const store = transaction.objectStore("pending");
+    const transaction = db.transaction(["budget"], "readwrite");
+    const store = transaction.objectStore("budget");
     store.add(record);
 };
 
-//this section compares the online database to the pending and merges them
+//this section compares the online database to the budget and merges them
 function checkDatabase() {
-    const transaction = db.transaction(["pending"], "readwrite");
-    const store = transaction.objectStore("pending");
+    const transaction = db.transaction(["budget"], "readwrite");
+    const store = transaction.objectStore("budget");
     const getAll = store.getAll();
 
     getAll.onsucess = function() {
@@ -46,8 +46,8 @@ function checkDatabase() {
             })
             .then(response => response.json())
             .then(() => {
-                const transaction = db.transaction(["pending"], "readwrite");
-                const store = transaction.objectStore("pending");
+                const transaction = db.transaction(["budget"], "readwrite");
+                const store = transaction.objectStore("budget");
                 store.clear();
             });
         }
