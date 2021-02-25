@@ -4,11 +4,14 @@ let db = () => {
 //creates storage for the objects that are awating being "online"
     request.onupgradeneeded = function(evt) {
         const db = evt.target.result;
-        db.createObjectStore("budget", { keyPath: "id", autoIncrement: true });
+        const budgetStore = db.createObjectStore("budget", { keyPath: "id", autoIncrement: true });
+        budgetStore.createIndex("nameIndex", "name");
+        budgetStore.createIndex("valueIndex", "value");
+        budgetStore.createIndex("dateIndex", "date");
     };
 };    
 
-//creates a transaction on the budget DB, store the object
+//creates a transaction on the budget DB, determines if online
 let saveRecord = (record) => {
     const request = window.indexedDB.open("budget", 1);
     request.onerror = function(evt) {
@@ -17,8 +20,8 @@ let saveRecord = (record) => {
     request.onsucess = () => {
         const db = request.result;
         const transaction = db.transaction(["budget"], "readwrite");
-        const store = transaction.objectStore("budget");
-        store.add(record);
+        const budgetStore = transaction.objectStore("budget");
+        budgetStore.add({ name: record.name, value: record.value, date: record.date});
     };
 };
 
