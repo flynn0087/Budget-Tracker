@@ -21,14 +21,14 @@ request.onerror = function(evt) {
     console.log("There was an error");
 };
 
-//creates a transaction on the pending DB, store the object
+//creates a transaction on the budget DB, store the object
 function saveRecord(record) {
     const transaction = db.transaction(["budget"], "readwrite");
     const budgetStore = transaction.objectStore("budget");
     budgetStore.add(record);
 };
 
-//this section compares the online database to the pending and merges them
+//this section compares the online database to the budget and merges them
 function checkDatabase() {
     const transaction = db.transaction(["budget"], "readwrite");
     const budgetStore = transaction.objectStore("budget");
