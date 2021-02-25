@@ -4,7 +4,7 @@ let db = () => {
 //creates storage for the objects that are awating being "online"
     request.onupgradeneeded = function(evt) {
         const db = evt.target.result;
-        db.createObjectStore("budget", { keyPath: "id", autoIncrement: true });
+        db.createObjectStore("pending", { keyPath: "id", autoIncrement: true });
     };
 };    
 
@@ -21,17 +21,17 @@ request.onerror = function(evt) {
     console.log("There was an error");
 };
 
-//creates a transaction on the budget DB, store the object
+//creates a transaction on the pending DB, store the object
 function saveRecord(record) {
-    const transaction = db.transaction(["budget"], "readwrite");
-    const store = transaction.objectStore("budget");
+    const transaction = db.transaction(["pending"], "readwrite");
+    const store = transaction.objectStore("pending");
     store.add(record);
 };
 
-//this section compares the online database to the budget and merges them
+//this section compares the online database to the pending and merges them
 function checkDatabase() {
-    const transaction = db.transaction(["budget"], "readwrite");
-    const store = transaction.objectStore("budget");
+    const transaction = db.transaction(["pending"], "readwrite");
+    const store = transaction.objectStore("pending");
     const getAll = store.getAll();
 
     getAll.onsucess = function() {
@@ -46,8 +46,8 @@ function checkDatabase() {
             })
             .then(response => response.json())
             .then(() => {
-                const transaction = db.transaction(["budget"], "readwrite");
-                const store = transaction.objectStore("budget");
+                const transaction = db.transaction(["pending"], "readwrite");
+                const store = transaction.objectStore("pending");
                 store.clear();
             });
         }
