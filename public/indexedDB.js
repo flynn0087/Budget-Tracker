@@ -5,7 +5,7 @@ const request = indexedDB.open("budget", 1);
 //creates storage for the objects that are awating being "online"
 request.onupgradeneeded = function(evt) {
     const db = evt.target.result;
-    db.createObjectStore("pending", { autoIncrement: true });
+    db.createObjectStore("pending", { keyPath: "id", autoIncrement: true });
 };
 
 //checks if online before reading the database
