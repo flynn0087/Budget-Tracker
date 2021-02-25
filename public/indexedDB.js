@@ -5,7 +5,7 @@ const request = indexedDB.open("budget", 1);
 //creates storage for the objects that are awating being "online"
 request.onupgradeneeded = function(evt) {
     const db = evt.target.result;
-    db.createObjectStore("pending", { keyPath: "id", autoIncement: true });
+    db.createObjectStore("pending", { autoIncrement: true });
 };
 
 //checks if online before reading the database
@@ -22,7 +22,7 @@ request.onerror = function(evt) {
 };
 
 //creates a transaction on the pending DB, store the object
-function saveRecord(record) {
+function pendingRecord(record) {
     const transaction = db.transaction(["pending"], "readwrite");
     const store = transaction.objectStore("pending");
     store.add(record);
