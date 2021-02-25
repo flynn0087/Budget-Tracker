@@ -14,9 +14,6 @@ request.onupgradeneeded = function(evt) {
 //checks if online before reading the database
 request.onsuccess = function(evt) {
     db = evt.target.result;
-    if (navigator.onLine) {
-        checkDatabase();
-    }
 };
 
 //gives error if not online
