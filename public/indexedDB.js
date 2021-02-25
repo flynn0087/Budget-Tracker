@@ -31,7 +31,7 @@ function pendingRecord(record) {
 //this section compares the online database to the pending and merges them
 function checkDatabase() {
     const transaction = db.transaction(["pending"], "readwrite");
-    const store = transaction.createObjectStore("pending");
+    const store = transaction.objectStore("pending");
     const allPending = store.allPending();
 
     allPending.onsucess = function() {
